@@ -6,7 +6,7 @@ export class APIgetter extends Component{
   
     makeFetch(){
         console.log('APIgetter button trying a Backend fetch');
-        fetch('http://localhost:19004/api', {method: "GET"})
+        fetch('http://localhost:8082', {method: "GET"})
             .then((response) => response.json())
             .then((data) => this.setState({fetchedData: data.magic_number.toString()}))
             .catch((err) => {console.log(err.message);});

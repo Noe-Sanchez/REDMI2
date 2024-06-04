@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const port = 8003;
+const port = 8082;
 const init_time = Date.now() / 1000;
 
 function requestTime(){
