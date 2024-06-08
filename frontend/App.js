@@ -1,16 +1,20 @@
-import React, {Component} from 'react' 
-import {APIgetter, APIposter} from './api_tools'
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from 'react-native';
 
-export default class MainView extends Component{
-  render(){
-    console.log('Rendering MainView')
-    return(
-      <>
-        <APIposter/>
-        <APIgetter/>
-      </>
-    );
-  }
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Text>Open up App.js to start working on your app!</Text>
+      <StatusBar style="auto" />
+    </View>
+  );
 }
 
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
