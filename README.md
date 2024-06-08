@@ -5,8 +5,7 @@
 ```bash
 cd frontend
 npm install
-export WEB_PORT=8081
-npx expo-cli start --web 
+npx expo start -m tunnel
 ```
 
 ## Backend
