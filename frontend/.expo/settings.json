@@ -1,3 +1,6 @@
 {
-  "urlRandomness": "lnLtzYM"
+  "urlRandomness": "lnLtzYM",
+  "dev": true,
+  "minify": false,
+  "https": false
 }
