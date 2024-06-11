@@ -59,12 +59,7 @@ function Interactible() {
 
   const onPressDock = (dockName) => {
     try{
-      {press2 == "Pressed" ? (
-        Alert.alert(title='¿Confirmas '+ dockName + ' para la llegada?',message=undefined,buttons=[{text:'Smn', onPress: pressConfirm(dockName), style: 'cancel'},{text: 'Pérame no!'}])
-      ) : (
-        Alert.alert(title='¿Confirmas '+ dockName + ' para la salida?',message=undefined,buttons=[{text:'Smn', onPress: pressConfirm(dockName), style: 'cancel'},{text: 'Pérame no!'}])
-      )
-      }
+      Alert.alert(title='¿Confirmas '+ dockName + ' para la llegada?',message=undefined,buttons=[{text:'Smn', onPress: () => pressConfirm(dockName), style: 'cancel'},{text: 'Pérame no!'}])
       console.log('Dock selected');
     } catch (e) {
       console.log(e)
