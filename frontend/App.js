@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import MapView from 'react-native-maps';
-import { StyleSheet, Text, View, Dimensions, Alert, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Alert, TouchableHighlight, Image} from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -132,7 +132,10 @@ export default function App() {
   return (
     <View style={styles.container}>
 
-      <Text style={styles.title}>PATOS</Text>
+      <View style={styles.containerTitle}>
+        <Image source={require("./assets/icon.png")} style={styles.logo}/>
+        <Text style={styles.title}>PATOS</Text>
+      </View>
       <Text style={styles.subtitle}>Plataforma de Atención con</Text>
       <Text style={styles.subtitle}>Tecnología Óptima Sostenible</Text>
 
@@ -151,6 +154,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
+    backgroundColor: '#160f29',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  containerTitle:{
+    flexDirection: 'row',
+    width: '100%',
+    height: '10%',
     backgroundColor: '#160f29',
     alignItems: 'center',
     justifyContent: 'center',
@@ -191,9 +202,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    width: 300,
-    height: 300,
-    marginBottom: 0,
+    width: 70,
+    height: 70,
+    marginRight: 10,
   },
   title: {
     fontSize: windowWidth > windowHeight ? windowWidth * 0.07 : windowWidth * 0.15,
