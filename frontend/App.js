@@ -1,18 +1,22 @@
 import React, {useState} from 'react';
-import MapView from 'react-native-maps';
+import MapView, {Marker, Callout} from 'react-native-maps';
 import { StyleSheet, Text, View, Dimensions, Alert, TouchableHighlight, Image} from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const docks = [{
-  id: 0,
-  name: 'Dock 1',
-  latitude: 25.65091732964922,
-  longitude: -100.28961081775692,
-  status: 'Available',
-},{
+const docks = [
+  {
+    name: 'Dock 1',
+    location:{
+      latitude: 25.65091732964922,
+      longitude: -100.28961081775692,
+    },
+    status: 'Available',
+  },
+  {
 
-}];
+  }
+];
 
 function Interactible() {
   const [press1, setPress1] = useState('');
@@ -44,21 +48,56 @@ function Interactible() {
     }
   }
 
-  const onPressBack = (id) => {
+  const onPressBack = () => {
     try{
-      Alert.alert(title='¿Quieres regresar? '+id,message=undefined,buttons=[{text:'Smn', onPress: pressConfirm, style: 'cancel'},{text: 'Pérame no!'}]);
+      setPress1('');
+      console.log('Back button');
     } catch (e) {
       console.log(e)
     }
   }
 
-  const pressConfirm = () => {
+  const onPressDock = (dockName) => {
     try{
-      setPress1('');
+      {press2 == "Pressed" ? (
+        Alert.alert(title='¿Confirmas '+ dockName + ' para la llegada?',message=undefined,buttons=[{text:'Smn', onPress: pressConfirm(dockName), style: 'cancel'},{text: 'Pérame no!'}])
+      ) : (
+        Alert.alert(title='¿Confirmas '+ dockName + ' para la salida?',message=undefined,buttons=[{text:'Smn', onPress: pressConfirm(dockName), style: 'cancel'},{text: 'Pérame no!'}])
+      )
+      }
+      console.log('Dock selected');
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const pressConfirm = (dockName) => {
+    try{
+      setPress1(dockName);
       console.log('Confirmed button');
     } catch (e) {
       console.log(e)
     }
+  }
+
+  const showDocks = () => {
+    return docks.map((dock,index) => {
+      return (
+        <Marker 
+          key={index}
+          coordinate={dock.location}
+          title={dock.name}
+          description={dock.status}
+          pinColor={dock.status == 'Available' ? 'red' : 'gray'}
+        >
+          <Callout>
+            <TouchableHighlight onPress={() => onPressDock(dock.name)} underlayColor="#281A39">
+              <Text>{dock.status == 'Available' ? 'Select ' + dock.name : dock.name + ' ' + dock.status}</Text>
+            </TouchableHighlight>
+          </Callout>
+        </Marker>
+      )
+    })
   }
 
   return (
@@ -83,7 +122,9 @@ function Interactible() {
               latitudeDelta: 0.005,
               longitudeDelta: 0.005,
             }}
-          />
+          >
+            {showDocks()} 
+          </MapView>
         </View>
       ) : (
         <View style={styles.full}>
@@ -116,8 +157,8 @@ function Interactible() {
 
           </View>
 
-          <TouchableHighlight style={press1 == "Pressed" ? styles.button : styles.button2} onPress={onPress2} underlayColor={press1 == "" ? "#34224A" : "#b498d4"}>
-            <Text style={press1 == "Pressed" ? styles.text : styles.text2}>Seleccionar</Text>
+          <TouchableHighlight style={press1 == "" ? styles.button2 : styles.button} onPress={onPress2} underlayColor={press1 == "" ? "#34224A" : "#b498d4"}>
+            <Text style={press1 == "" ? styles.text2 : styles.text}>Seleccionar</Text>
           </TouchableHighlight>
 
           </View>
