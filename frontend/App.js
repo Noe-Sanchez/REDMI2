@@ -1,27 +1,49 @@
 import React, {useState} from 'react';
-import MapView from 'react-native-maps';
+import MapView, {Marker, Callout} from 'react-native-maps';
 import { StyleSheet, Text, View, Dimensions, Alert, TouchableHighlight, Image} from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const docks = [{
-  id: 0,
-  name: 'Dock 1',
-  latitude: 25.65091732964922,
-  longitude: -100.28961081775692,
-  status: 'Available',
-},{
-
-}];
+const docks = [
+  {
+    name: 'Dock 1',
+    location:{
+      latitude: 25.65091732964922,
+      longitude: -100.28961081775692,
+    },
+    status: 'Available',
+  },
+  {
+    name: 'Dock 2',
+    location:{
+      latitude: 25.650968104986795, 
+      longitude: -100.28790225061326,
+    },
+    status: 'Available',
+  },
+  {
+    name: 'Dock 3',
+    location:{
+      latitude: 25.65011701122681,
+      longitude: -100.28851915868894,
+    },
+    status: 'Unavailable',
+  }
+];
 
 function Interactible() {
-  const [press1, setPress1] = useState('');
-  const [press2, setPress2] = useState('');
+  const [dockSalida, setDockS] = useState('');
+  const [dockLlegada, setDockL] = useState('');
   
 
   const onPress1 = () => {
     try{
-      setPress1('Pressed');
+      {dockSalida == '' ? (
+        setDockS('Pressed')
+      ) : (
+        Alert.alert(title='¿Quieres cambiar de '+ dockSalida + '?',message=undefined,buttons=[{text:'Smn', onPress: () => pressConfirm('Pressed'), style: 'cancel'},{text: 'Pérame no!'}])
+      )
+      }
       console.log('Pressed 1st button');
     } catch (e) {
       console.log(e)
@@ -30,13 +52,13 @@ function Interactible() {
 
   const onPress2 = () => {
     try{
-      if(press1 != "Pressed"){
+      if(dockSalida != "Pressed"){
         Alert.alert('Primero selecciona el dock de partida');
         return;
       }
       else{
         Alert.alert('You tapped the 2nd button!');
-        setPress2('Pressed_2');
+        setDockL('Pressed_2');
         console.log('Pressed 2nd button');
       }
     } catch (e) {
@@ -44,29 +66,68 @@ function Interactible() {
     }
   }
 
-  const onPressBack = (id) => {
+  const onPressBack = () => {
     try{
-      Alert.alert(title='¿Quieres regresar? '+id,message=undefined,buttons=[{text:'Smn', onPress: pressConfirm, style: 'cancel'},{text: 'Pérame no!'}]);
+      setDockS('');
+      console.log('Back button');
     } catch (e) {
       console.log(e)
     }
   }
 
-  const pressConfirm = () => {
+  const onPressDock = (dockName) => {
     try{
-      setPress1('');
+      {dockLlegada == "Pressed" ? (
+        Alert.alert(title='¿Confirmas '+ dockName + ' para la llegada?',message=undefined,buttons=[{text:'Smn', onPress: () => pressConfirm(dockName), style: 'cancel'},{text: 'Pérame no!'}])
+      ) : (
+        Alert.alert(title='¿Confirmas '+ dockName + ' para la salida?',message=undefined,buttons=[{text:'Smn', onPress: () => pressConfirm(dockName), style: 'cancel'},{text: 'Pérame no!'}])
+      )
+      }
+      console.log('Dock selected');
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const pressConfirm = (dockName) => {
+    try{
+      setDockS(dockName);
       console.log('Confirmed button');
     } catch (e) {
       console.log(e)
     }
   }
 
+  const showDocks = () => {
+    return docks.map((dock,index) => {
+      return (
+        <Marker 
+          key={index}
+          coordinate={dock.location}
+          title={dock.name}
+          description={dock.status}
+          pinColor={dock.status == 'Available' ? 'red' : 'gray'}
+        >
+          <Callout style={styles.containerMarker}>
+            {dock.status == 'Available' ? (
+              <TouchableHighlight style={styles.buttonMarker} onPress={() => onPressDock(dock.name)} underlayColor="#b3b9ff">
+                <Text style={styles.textMarker}>{'Select ' + dock.name}</Text>
+              </TouchableHighlight>
+            ) : (
+              <Text>{dock.name + ' ' + dock.status}</Text>
+            )}
+          </Callout>
+        </Marker>
+      )
+    })
+  }
+
   return (
     <View style={styles.containerInter}>
-      {press1 == "Pressed" ? (
+      {dockSalida == "Pressed" ? (
         <View style={styles.full}>
           <View style={styles.containerMap}>
-            {press2 == "Pressed_2" ? (
+            {dockLlegada == "Pressed_2" ? (
               <Text style={styles.subtitle}>Elige un dock de llegada</Text>
               ) : (
               <Text style={styles.subtitle}>Elige un dock de salida</Text>)
@@ -83,7 +144,9 @@ function Interactible() {
               latitudeDelta: 0.005,
               longitudeDelta: 0.005,
             }}
-          />
+          >
+            {showDocks()} 
+          </MapView>
         </View>
       ) : (
         <View style={styles.full}>
@@ -116,8 +179,8 @@ function Interactible() {
 
           </View>
 
-          <TouchableHighlight style={press1 == "Pressed" ? styles.button : styles.button2} onPress={onPress2} underlayColor={press1 == "" ? "#34224A" : "#b498d4"}>
-            <Text style={press1 == "Pressed" ? styles.text : styles.text2}>Seleccionar</Text>
+          <TouchableHighlight style={dockSalida == "" ? styles.button2 : styles.button} onPress={onPress2} underlayColor={dockSalida == "" ? "#34224A" : "#b498d4"}>
+            <Text style={dockSalida == "" ? styles.text2 : styles.text}>Seleccionar</Text>
           </TouchableHighlight>
 
           </View>
@@ -274,6 +337,13 @@ const styles = StyleSheet.create({
     width: '30%',
     height: '100%',
   },
+  containerMarker:{
+    width: '50',
+    height: '50',
+    backgroundColor: '#ffffff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   buttonBack: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -288,5 +358,18 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '90%',
   },
-
+  buttonMarker: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 4,
+    paddingHorizontal: 4,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: '#ffffff',
+  },
+  textMarker: {
+    fontWeight: '',
+    letterSpacing: 0.25,
+    color: 'blue',
+  },
 });
