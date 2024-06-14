@@ -366,7 +366,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     elevation: 3,
     backgroundColor: '#ffffff',
-    marginLeft: 20,
   },
   textMarker: {
     fontWeight: '',
