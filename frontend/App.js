@@ -95,14 +95,14 @@ function Interactible() {
 
   const onPressDock = (dockName) => {
     try{
-      {dockLlegada == "Pressed" ? (
-        dockPartida == dockName ? (
-          Alert.alert('Dock de partida y llegada no pueden ser el mismo')
-        ) : (
-          Alert.alert(title='¿Confirmas ' + dockName + ' para llegar?',message=undefined,buttons=[{text:'Sí', onPress: () => pressConfirm(dockName), style: 'cancel'},{text: 'No'}])
-        )
+      {dockPartida == dockName || dockLlegada == dockName ? (
+        Alert.alert('Dock de partida y llegada no pueden ser el mismo')
       ) : (
-        Alert.alert(title='¿Confirmas ' + dockName + ' para partir?',message=undefined,buttons=[{text:'Sí', onPress: () => pressConfirm(dockName), style: 'cancel'},{text: 'No'}])
+        dockLlegada == "Pressed" ? (
+          Alert.alert(title='¿Confirmas ' + dockName + ' para llegar?',message=undefined,buttons=[{text:'Sí', onPress: () => pressConfirm(dockName), style: 'cancel'},{text: 'No'}])
+        ) : (
+          Alert.alert(title='¿Confirmas ' + dockName + ' para partir?',message=undefined,buttons=[{text:'Sí', onPress: () => pressConfirm(dockName), style: 'cancel'},{text: 'No'}])
+        )
       )
       }
       console.log('Dock selected');
