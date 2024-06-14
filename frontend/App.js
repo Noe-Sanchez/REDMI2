@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, Dimensions, Alert, TouchableHighlight, Image} f
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+
 const docks = [
   {
     name: 'Dock 1',
@@ -27,21 +28,21 @@ const docks = [
       latitude: 25.65011701122681,
       longitude: -100.28851915868894,
     },
-    status: 'Unavailable',
+    status: 'Available',
   }
 ];
 
 function Interactible() {
-  const [dockSalida, setDockS] = useState('');
+  const [dockPartida, setDockP] = useState('');
   const [dockLlegada, setDockL] = useState('');
   
 
   const onPress1 = () => {
     try{
-      {dockSalida == '' ? (
-        setDockS('Pressed')
+      {dockPartida == '' ? (
+        setDockP('Pressed')
       ) : (
-        Alert.alert(title='¿Quieres cambiar de '+ dockSalida + '?',message=undefined,buttons=[{text:'Smn', onPress: () => pressConfirm('Pressed'), style: 'cancel'},{text: 'Pérame no!'}])
+        Alert.alert(title='¿Quieres cambiar '+ dockPartida + '?',message=undefined,buttons=[{text:'Sí', onPress: () => pressChange(1), style: 'cancel'},{text: 'No'}])
       )
       }
       console.log('Pressed 1st button');
@@ -52,15 +53,27 @@ function Interactible() {
 
   const onPress2 = () => {
     try{
-      if(dockSalida != "Pressed"){
-        Alert.alert('Primero selecciona el dock de partida');
-        return;
+      {dockLlegada == '' ? (
+        setDockL('Pressed')
+      ) : (
+        Alert.alert(title='¿Quieres cambiar de ' + dockLlegada + '?',message=undefined,buttons=[{text:'Sí', onPress: () => pressChange(2), style: 'cancel'},{text: 'No'}])
+      )
       }
-      else{
-        Alert.alert('You tapped the 2nd button!');
-        setDockL('Pressed_2');
-        console.log('Pressed 2nd button');
+      console.log('Pressed 2nd button');
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const onPress3 = () => {
+    try{
+      {dockPartida == '' || dockLlegada == '' ? (
+        Alert.alert('Primero selecciona los docks de partida y llegada')
+      ) : (
+        Alert.alert(title='¿Confirmas mandar el dron de ' + dockPartida + ' a ' + dockLlegada + '?',message=undefined,buttons=[{text:'Sí', onPress: () => pressSend(), style: 'cancel'},{text: 'No'}])
+      )
       }
+      console.log('Pressed 2nd button');
     } catch (e) {
       console.log(e)
     }
@@ -68,7 +81,12 @@ function Interactible() {
 
   const onPressBack = () => {
     try{
-      setDockS('');
+      if(dockPartida == "Pressed"){
+        setDockP('');
+      }
+      else{
+        setDockL('');
+      }
       console.log('Back button');
     } catch (e) {
       console.log(e)
@@ -78,9 +96,13 @@ function Interactible() {
   const onPressDock = (dockName) => {
     try{
       {dockLlegada == "Pressed" ? (
-        Alert.alert(title='¿Confirmas '+ dockName + ' para la llegada?',message=undefined,buttons=[{text:'Smn', onPress: () => pressConfirm(dockName), style: 'cancel'},{text: 'Pérame no!'}])
+        dockPartida == dockName ? (
+          Alert.alert('Dock de partida y llegada no pueden ser el mismo')
+        ) : (
+          Alert.alert(title='¿Confirmas ' + dockName + ' para llegar?',message=undefined,buttons=[{text:'Sí', onPress: () => pressConfirm(dockName), style: 'cancel'},{text: 'No'}])
+        )
       ) : (
-        Alert.alert(title='¿Confirmas '+ dockName + ' para la salida?',message=undefined,buttons=[{text:'Smn', onPress: () => pressConfirm(dockName), style: 'cancel'},{text: 'Pérame no!'}])
+        Alert.alert(title='¿Confirmas ' + dockName + ' para partir?',message=undefined,buttons=[{text:'Sí', onPress: () => pressConfirm(dockName), style: 'cancel'},{text: 'No'}])
       )
       }
       console.log('Dock selected');
@@ -89,10 +111,37 @@ function Interactible() {
     }
   }
 
+  const pressChange = (button) => {
+    try{
+      {button == 1 ? (
+        setDockP('Pressed')
+      ) : (
+        setDockL('Pressed')
+      )
+      }
+      console.log('Change button');
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   const pressConfirm = (dockName) => {
     try{
-      setDockS(dockName);
+      {dockPartida == "Pressed" ? (
+        setDockP(dockName)
+      ) : (
+        setDockL(dockName)
+      )
+      }
       console.log('Confirmed button');
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const pressSend = () => {
+    try{
+      console.log('Send button');
     } catch (e) {
       console.log(e)
     }
@@ -124,13 +173,13 @@ function Interactible() {
 
   return (
     <View style={styles.containerInter}>
-      {dockSalida == "Pressed" ? (
+      {dockPartida == "Pressed" || dockLlegada == "Pressed" ? (
         <View style={styles.full}>
           <View style={styles.containerMap}>
-            {dockLlegada == "Pressed_2" ? (
+            {dockLlegada == "Pressed" ? (
               <Text style={styles.subtitle}>Elige un dock de llegada</Text>
               ) : (
-              <Text style={styles.subtitle}>Elige un dock de salida</Text>)
+              <Text style={styles.subtitle}>Elige un dock de partida</Text>)
             }
             <TouchableHighlight style={styles.buttonBack} onPress={() => onPressBack(0)} underlayColor="#281A39">
               <Text style={styles.subtitle}>Regresar</Text>
@@ -155,10 +204,18 @@ function Interactible() {
 
               <Text style={styles.title}>1</Text>
 
-              <View style={styles.containerText}>
-                <Text style={styles.instructions}>Selecciona el dock de</Text>
-                <Text style={styles.instructions}>donde partirá el dron</Text>
-              </View>
+              
+              {dockPartida == "" ? (
+                <View style={styles.containerText}>
+                  <Text style={styles.instructions}>Selecciona el dock de</Text>
+                  <Text style={styles.instructions}>donde partirá el dron</Text>
+                </View>
+              ) : (
+                <View style={styles.containerText}>
+                  <Text style={styles.instructions}>Dock de partida:</Text>
+                  <Text style={styles.instructions}>{dockPartida}</Text>
+                </View>
+              )}
 
             </View>
 
@@ -168,22 +225,46 @@ function Interactible() {
 
           </View>
           <View style={styles.containerOpt}>
-          <View style={styles.containerInstr}>
+            <View style={styles.containerInstr}>
 
-            <Text style={styles.title}>2</Text>
-            
-            <View style={styles.containerText}>
-              <Text style={styles.instructions}>Selecciona el dock</Text>
-              <Text style={styles.instructions}>más cercano a ti</Text>
+              <Text style={styles.title}>2</Text>
+
+              {dockLlegada == "" ? (
+                <View style={styles.containerText}>
+                  <Text style={styles.instructions}>Selecciona el dock a</Text>
+                  <Text style={styles.instructions}>donde llegará el dron</Text>
+                </View>
+              ) : (
+                <View style={styles.containerText}>
+                  <Text style={styles.instructions}>Dock de llegada:</Text>
+                  <Text style={styles.instructions}>{dockLlegada}</Text>
+                </View>
+              )}
+
             </View>
 
-          </View>
-
-          <TouchableHighlight style={dockSalida == "" ? styles.button2 : styles.button} onPress={onPress2} underlayColor={dockSalida == "" ? "#34224A" : "#b498d4"}>
-            <Text style={dockSalida == "" ? styles.text2 : styles.text}>Seleccionar</Text>
-          </TouchableHighlight>
+            <TouchableHighlight style={styles.button} onPress={onPress2} underlayColor={"#b498d4"}>
+              <Text style={styles.text}>Seleccionar</Text>
+            </TouchableHighlight>
 
           </View>
+          <View style={styles.containerOpt}>
+            <View style={styles.containerInstr}>
+
+              <Text style={styles.title}>3</Text>
+              
+              <View style={styles.containerText}>
+                <Text style={styles.instructions}>¡Manda el dron!</Text>
+              </View>
+
+            </View>
+
+            <TouchableHighlight style={dockPartida == '' || dockLlegada == '' ? styles.button2 : styles.button} onPress={onPress3} underlayColor={dockPartida == '' || dockLlegada == '' ? "#34224A" : "#b498d4"}>
+              <Text style={dockPartida == '' || dockLlegada == '' ? styles.text2 : styles.text}>Seleccionar</Text>
+            </TouchableHighlight>
+
+          </View>
+          
         </View>
       )}
     </View>
@@ -240,8 +321,8 @@ const styles = StyleSheet.create({
   },
   containerOpt: {
     flexDirection: 'column',
-    width: windowWidth > windowHeight ? '48%' : '100%',
-    height: windowWidth > windowHeight ? '100%' : '48%',    
+    width: windowWidth > windowHeight ? '30%' : '100%',
+    height: windowWidth > windowHeight ? '100%' : '33%',    
     backgroundColor: '#160f29',
     alignItems: 'center',
     justifyContent: 'center',
@@ -263,6 +344,7 @@ const styles = StyleSheet.create({
     backgroundColor: '',
     alignItems: 'center',
     justifyContent: 'center',
+    marginLeft: '2%',
   },
   logo: {
     width: 70,
