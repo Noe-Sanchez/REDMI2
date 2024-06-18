@@ -142,9 +142,24 @@ function Interactible() {
   const pressSend = () => {
     try{
       console.log('Send button');
+      fetch('http://192.168.0.107:8082/delivery', {
+            method: "POST", 
+	    body: JSON.stringify({dockPartida: dockPartida, dockLlegada: dockLlegada}),
+            headers: {'Content-Type': 'application/json'}
+        })
+        .then(console.log("A")) //(response) => console.log(response))
+        .catch((err) => {console.log(err.message); console.log("Error 1")});
+      /* fetch('http://192.168.0.136:8082/', {
+	method: 'GET'
+	})
+	.then((response) => console.log(response))
+	.catch((err) => {console.log(err.message);});
+*/
     } catch (e) {
+      console.log('Error 2');
       console.log(e)
     }
+    console.log('Tried to send');
   }
 
   const showDocks = () => {
