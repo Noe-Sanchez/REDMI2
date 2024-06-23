@@ -142,7 +142,7 @@ function Interactible() {
   const pressSend = () => {
     try{
       console.log('Send button');
-      fetch('http://192.168.0.107:8082/delivery', {
+      fetch('http://172.20.10.9:8082/delivery', {
             method: "POST", 
 	    body: JSON.stringify({dockPartida: dockPartida, dockLlegada: dockLlegada}),
             headers: {'Content-Type': 'application/json'}

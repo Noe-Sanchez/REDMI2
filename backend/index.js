@@ -29,6 +29,12 @@ app.get('/', (req, res) => {
   res.send('Debug route');
 })
 
+app.post('/delivery', (req, res) => {
+  console.log('Inbound POST request at ' + requestTime() + ' seconds');
+  console.log('Request body:', req.body);
+  res.send('POST request received');
+})
+
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 })
